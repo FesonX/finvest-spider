@@ -6,8 +6,8 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymongo
+import re
 from scrapy.conf import settings
-from scrapy.selector import Selector
 
 
 class FinvestPipeline(object):
@@ -23,8 +23,14 @@ class FinvestPipeline(object):
         self.db = self.client[settings['MONGO_DB']]
         self.coll = self.db[settings['MONGO_COLL']]
 
-    def process_item(self, item):
+    def process_item(self, item, spider):
         content = item['content']
-        Selector()
+        
+        content = content.replace(u'<p>', u' ').replace(u'</p>', u' ').replace(u'\n\t', ' ').strip()
+        # delete html label in content
+        rule = re.compile(r'<[^>]+>', re.S)
+        content = rule.sub('', content)
+
+        item['content'] = content
         self.coll.insert(dict(item))
         return item

@@ -15,6 +15,12 @@ SPIDER_MODULES = ['finvest.spiders']
 NEWSPIDER_MODULE = 'finvest.spiders'
 
 
+# Add Pipeline Here
+ITEM_PIPELINES = {
+    'finvest.pipelines.FinvestPipeline': 100
+}
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'finvest (+http://www.yourdomain.com)'
 

@@ -7,7 +7,7 @@ import scrapy
 
 
 class FinvestItem(scrapy.Item):
-    # Common Infomation
+    # Common Information
 
     # Article Title
     title = scrapy.Field()
