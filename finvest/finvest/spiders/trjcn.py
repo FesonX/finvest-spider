@@ -21,9 +21,10 @@ class TrjcnSpider(scrapy.Spider):
         #
         le = LinkExtractor(restrict_css='div.newMain>div>div>a:nth-child(7)')
         links = le.extract_links(response)
+        
         if links:
             next_url = links[-1].url
-            yield scrapy.Request(next_url, callback=self.parse, headers=self.headers)
+            yield scrapy.Request(next_url, callback=self.parse, headers=self.headers, dont_filter=False)
             
     def news_parse(self, response):
         item = FinvestItem()
