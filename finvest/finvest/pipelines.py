@@ -25,12 +25,23 @@ class FinvestPipeline(object):
 
     def process_item(self, item, spider):
         content = item['content']
+        title = item['title']
+
+        fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)+?1?2?3?轮|(?:天使轮|种子|首)轮|IPO|轮|(?:p|Pre)IPO')
         
+        result = fin.findall(title)
+        if(len(result) == 0):
+            result = "未透露"
+        else:
+            result = ''.join(result)
+
         content = content.replace(u'<p>', u' ').replace(u'</p>', u' ').replace(u'\n\t', ' ').strip()
         # delete html label in content
         rule = re.compile(r'<[^>]+>', re.S)
         content = rule.sub('', content)
 
+
         item['content'] = content
+        item['funding_round'] = result
         self.coll.insert(dict(item))
         return item

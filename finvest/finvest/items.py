@@ -23,3 +23,6 @@ class FinvestItem(scrapy.Item):
 
     # Article Source
     source = scrapy.Field()
+
+    # Funding Round
+    funding_round = scrapy.Field()

@@ -3,7 +3,7 @@ Finance and Investment Info Spider Collections - 投融资信息爬取集合
 >取Finance和Investment的前几个字母组成项目名
 
 ## 已接入爬虫的网站
->### [投中网](www.chinaventure.com.cn)
+>### [投中网](http://www.chinaventure.com.cn)
 Spider名称: trjcn
 
 >### [投融界](http://news.trjcn.com/list_70.html)
