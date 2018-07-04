@@ -14,7 +14,7 @@ Spider名称: 36kr
 
 
 ## 爬虫分析过程
->[JS动态加载以及JavaScript void(0)的爬虫解决方案](HOW_TO_CRAWL(About JS).md)
+>[JS动态加载以及JavaScript void(0)的爬虫解决方案](HOW_TO_CRAWL_AboutJS.md)
 
 ## 安装依赖软件
 >1. [安装MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition)
