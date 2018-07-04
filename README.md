@@ -9,6 +9,12 @@ Spider名称: trjcn
 >### [投融界](http://news.trjcn.com/list_70.html)
 Spider名称: cvnews
 
+>### [36Kr](https://36kr.com/newsflashes)
+Spider名称: 36kr
+
+
+## 爬虫分析过程
+>[JS动态加载以及JavaScript void(0)的爬虫解决方案](HOW_TO_CRAWL(About JS).md)
 
 ## 安装依赖软件
 >1. [安装MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition)
@@ -45,6 +51,7 @@ scrapy crawl [spider_name] -s CLOSESPIDER_TIMEOUT=[N]
 ## 数据示例
 >1. [投中网](/finvest/cvnews.csv)
 >2. [投融界](/finvest/trjcn.csv)
+>3. [36Kr](/finvest/36kr.csv)
 
 ## LICENSE
 [MIT](/LICENSE)

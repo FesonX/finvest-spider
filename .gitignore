@@ -103,3 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 finvest/test.py
+finvest/.~lock.cvnews.csv#
+finvest/.~lock.trjcn.csv#
+finvest/finvest_dict.txt
