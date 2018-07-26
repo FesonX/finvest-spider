@@ -17,7 +17,8 @@ NEWSPIDER_MODULE = 'finvest.spiders'
 
 # Add Pipeline Here
 ITEM_PIPELINES = {
-    'finvest.pipelines.FinvestPipeline': 100
+    'finvest.pipelines.FinvestPipeline': 100,
+    'finvest.pipelines.SaveToCsvPipeline': 200
 }
 
 

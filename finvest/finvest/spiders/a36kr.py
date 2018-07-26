@@ -2,8 +2,11 @@
 import scrapy
 import json
 import re
+
 from scrapy import Request
 from ..items import FinvestItem
+from pymongo import MongoClient
+from scrapy.exceptions import CloseSpider
 
 
 class A36krSpider(scrapy.Spider):
@@ -20,14 +23,22 @@ class A36krSpider(scrapy.Spider):
 
     def parse(self, response):
         item = FinvestItem()
-        # 转化为 unicode 编码的数据
+        # transfer into unicode content
         sites = json.loads(response.body_as_unicode())
 
         src_pattern = re.compile('。（(.*)）')
 
         for i in sites['data']['items']:
-            item['link'] = i['news_url']
+            client = MongoClient()
+            db = client['Spider']
+            coll = db.finvest
+
+            if(coll.find_one() is not None):
+                if (coll.find_one()['title'] == i['title']):
+                    raise CloseSpider("Duplicate Data")
             item['title'] = i['title']
+            item['link'] = i['news_url']
+            
             if src_pattern.search(i['description']) == None:
                 item['source'] = "36Kr"
             else:

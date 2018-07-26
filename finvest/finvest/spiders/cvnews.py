@@ -2,8 +2,11 @@
 import scrapy
 import time
 import json
+
 from scrapy import Request
 from ..items import FinvestItem
+from pymongo import MongoClient
+from scrapy.exceptions import CloseSpider
 
 
 class CvnewsSpider(scrapy.Spider):
@@ -27,6 +30,13 @@ class CvnewsSpider(scrapy.Spider):
         sites = json.loads(response.body_as_unicode())
 
         for i in sites['data']:
+            client = MongoClient()
+            db = client['Spider']
+            coll = db.finvest
+
+            if(coll.find_one() is not None):
+                if (coll.find_one()['title'] == i['news']['title']):
+                    raise CloseSpider("Duplicate Data")
             item['link'] = "https://www.chinaventure.com.cn/cmsmodel/news/detail/%s.shtml" % (i['news']['id'])
             item['title'] = i['news']['title']
             item['source'] = i['news']['srcName']
