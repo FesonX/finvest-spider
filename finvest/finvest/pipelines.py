@@ -11,7 +11,8 @@ import time
 
 from scrapy.exceptions import DropItem
 from scrapy.conf import settings
-from scrapy.contrib.exporter import CsvItemExporter
+from scrapy.exporters import CsvItemExporter
+
 
 class FinvestPipeline(object):
 
@@ -29,26 +30,28 @@ class FinvestPipeline(object):
     def process_item(self, item, spider):
         self.coll = self.db['finvest']
 
-        if (self.coll.find_one({"title": item['title']}) == None): 
+        # if self.coll.find_one({"title": item['title']} is None):
+        if 1 is 1:
             content = item['content']
             title = item['title']
 
             # get funding round
             fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)+?1?2?3?轮|(?:天使轮|种子|首)轮|IPO|轮|(?:p|Pre)IPO')
             result = fin.findall(title)
-            if(len(result) == 0):
+            if len(result) == 0:
                 result = "未透露"
             else:
                 result = ''.join(result)
 
             content = content.replace(u'<p>', u' ').replace(u'</p>', u' ').replace(u'\n\t', ' ').strip()
+            content = content.replace('\n', '').strip()
             # delete html label in content
             rule = re.compile(r'<[^>]+>', re.S)
             content = rule.sub('', content)
 
             item['content'] = content
             item['funding_round'] = result
-            self.coll.insert(dict(item))
+            # self.coll.insert(dict(item))
             return item
 
         else:
@@ -64,29 +67,14 @@ class SaveToCsvPipeline(object):
     def __init__(self):
         now = time.strftime("%Y-%m-%d %H-%M-%S", time.localtime())
         filename = 'data/' + now + ".csv"
-        self.file = open(filename, 'wb' )
+        self.file = open(filename, 'wb')
         self.export = CsvItemExporter(self . file)
-        self.export.fields_to_export = ['title','create_time','link','content',
-        'source','funding_round']
+        self.export.fields_to_export = ['title', 'create_time', 'link', 'content', 'source', 'funding_round']
     
-    def spider_opened(self, spider):
-        # now = time.strftime("%Y-%m-%d %H-%M-%S", time.localtime())
-        # if (spider.name == "trjcn"):
-        #     # 路径 + 时间.csv
-        #     filename = 'data/trjcn ' + now + ".csv"
-        # if (spider.name == "cvnews"):
-        #     # 路径 + 时间.csv
-        #     filename = 'data/cvnews ' + now + ".csv"
-        # else:
-        #     filename = 'data/36kr ' + now + ".csv"
-        
-        # self.file = open(filename, 'wb' )
-        # self.export = CsvItemExporter(self . file)
-        # self.export.fields_to_export = ['title','create_time','link','content',
-        # 'source','funding_round']
+    def spider_opened(self):
         self.export.start_exporting
 
-    def spider_closed(self, spider):
+    def spider_closed(self):
         self.export.finish_exporting
         self.file.close()
 

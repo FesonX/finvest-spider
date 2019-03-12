@@ -34,8 +34,8 @@ class CvnewsSpider(scrapy.Spider):
             db = client['Spider']
             coll = db.finvest
 
-            if(coll.find_one() is not None):
-                if (coll.find_one()['title'] == i['news']['title']):
+            if coll.find_one() is not None:
+                if coll.find_one()['title'] == i['news']['title']:
                     raise CloseSpider("Duplicate Data")
             item['link'] = "https://www.chinaventure.com.cn/cmsmodel/news/detail/%s.shtml" % (i['news']['id'])
             item['title'] = i['news']['title']

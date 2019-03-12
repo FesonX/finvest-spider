@@ -2,9 +2,9 @@
 import scrapy
 
 from ..items import FinvestItem
-from scrapy.linkextractors import LinkExtractor
 from pymongo import MongoClient
 from scrapy.exceptions import CloseSpider
+
 
 class TrjcnSpider(scrapy.Spider):
     name = 'trjcn'
@@ -16,35 +16,24 @@ class TrjcnSpider(scrapy.Spider):
     count = 3
 
     def parse(self, response):
-        # #
-        # le = LinkExtractor(restrict_css='div.newMain>div>ul>li>h2')
-        # for link in le.extract_links(response):
-        #     yield scrapy.Request(link.url, callback=self.news_parse, headers=self.headers)
-        # #
         data = response.xpath('//*[@id="wap_pager_data"]/li/div/a/@href')
         for link in data:
             yield scrapy.Request(link.extract(), callback=self.news_parse, headers=self.headers)
-        # le = LinkExtractor(restrict_css='div.newMain>div>div>a:nth-child(7)')
-        # links = le.extract_links(response)
-        
-        # if links:
-        #     next_url = links[-1].url
-        #     yield scrapy.Request(next_url, callback=self.parse, headers=self.headers, dont_filter=False)
+
         if (self.count < 100):
             next_url = 'http://news.trjcn.com/list_70.html?page=%d' % self.count
 
             self.count = self.count + 1
             yield scrapy.Request(next_url, callback=self.parse, headers=self.headers, dont_filter=False)
-            
-            
+
     def news_parse(self, response):
         item = FinvestItem()
         client = MongoClient()
         db = client['Spider']
         coll = db.finvest
 
-        if(coll.find_one() is not None):
-            if (coll.find_one()['title'] == response.xpath('//div[@class="newDetail"]/h2/text()').extract_first()):
+        if coll.find_one() is not None:
+            if coll.find_one()['title'] == response.xpath('//div[@class="newDetail"]/h2/text()').extract_first():
                 raise CloseSpider("Duplicate Data")
         item['title'] = response.xpath('//div[@class="newDetail"]/h2/text()').extract_first()
         item['create_time'] = response.xpath('//div[@class="fl"]/span[1]/text()').extract_first()
