@@ -19,6 +19,10 @@ Spider名称: 36kr
 Spider名称: vcbeat
 行业: 医疗
 
+>### [芥末堆](https://www.jiemodui.com)
+Spider名称: jiemodui
+行业: 教育
+
 
 ## 爬虫分析过程
 >[JS动态加载以及JavaScript void(0)的爬虫解决方案](HOW_TO_CRAWL_AboutJS.md)
@@ -39,6 +43,7 @@ Spider名称: vcbeat
 
 ## 常用的爬虫命令
 >1. 爬取并输出csv文件
+本项目默认输出 csv 文件, 关于输出的 pipeline 请参考 `pipeline.py` 中的相关类
 ```shell
 scrapy crawl [spider_name] -o [doc_name].csv
 ```
@@ -56,9 +61,8 @@ scrapy crawl [spider_name] -s CLOSESPIDER_TIMEOUT=[N]
 ```
 
 ## 数据示例
->1. [投中网](/finvest/cvnews.csv)
->2. [投融界](/finvest/trjcn.csv)
->3. [36Kr](/finvest/36kr.csv)
+请移步 `data` 文件夹.
+仅供学习用途, 请勿商用.
 
 ## LICENSE
 [MIT](/LICENSE)
