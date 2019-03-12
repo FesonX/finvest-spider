@@ -5,12 +5,19 @@ Finance and Investment Info Spider Collections - 投融资信息爬取集合
 ## 已接入爬虫的网站
 >### [投中网](http://www.chinaventure.com.cn)
 Spider名称: trjcn
+行业: 综合
 
 >### [投融界](http://news.trjcn.com/list_70.html)
 Spider名称: cvnews
+行业: 综合
 
 >### [36Kr](https://36kr.com/newsflashes)
 Spider名称: 36kr
+行业: 综合
+
+>### [动脉网](https://vcbeat.net)
+Spider名称: vcbeat
+行业: 医疗
 
 
 ## 爬虫分析过程
