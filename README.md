@@ -23,6 +23,10 @@ Spider名称: vcbeat
 Spider名称: jiemodui
 行业: 教育
 
+>### [GAMELOOK](http://www.gamelook.com.cn/)
+Spider名称: gamelook
+行业: 游戏
+
 
 ## 爬虫分析过程
 >[JS动态加载以及JavaScript void(0)的爬虫解决方案](HOW_TO_CRAWL_AboutJS.md)
