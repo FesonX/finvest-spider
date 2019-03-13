@@ -20,7 +20,7 @@ class TrjcnSpider(scrapy.Spider):
         for link in data:
             yield scrapy.Request(link.extract(), callback=self.news_parse, headers=self.headers)
 
-        if (self.count < 100):
+        if self.count < 100:
             next_url = 'http://news.trjcn.com/list_70.html?page=%d' % self.count
 
             self.count = self.count + 1
