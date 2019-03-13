@@ -41,8 +41,14 @@ Spider名称: gamelook
 请参考[文章](https://www.cnblogs.com/alan2kat/p/7771635.html)
 
 >2. 安装Python
+```shell
+# For Ubuntu/Deepin etc.
+apt-get install python3
+```
 
 >3. 安装库依赖
+有关虚拟环境内容, 自行 Google `Virtualenv`
+`pip install -r requirements.txt`
 
 
 ## 常用的爬虫命令
