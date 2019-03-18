@@ -13,7 +13,7 @@ class A36krSpider(scrapy.Spider):
     name = '36kr'
     allowed_domains = ['36kr.com']
     # id: 69, 投融资, 101, 政策
-    start_urls = ['https://36kr.com/api/newsflash?column_ids=101&no_bid=true&b_id=&per_page=300']
+    start_urls = ['https://36kr.com/api/newsflash?column_ids=69&no_bid=true&b_id=&per_page=300']
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',

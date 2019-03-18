@@ -6,13 +6,18 @@ import json
 from scrapy import Request
 from ..items import FinvestItem
 from pymongo import MongoClient
+from scrapy.selector import Selector
 from scrapy.exceptions import CloseSpider
 
 
 class CvnewsSpider(scrapy.Spider):
     name = 'cvnews'
     allowed_domains = ['www.chinaventure.com.cn']
-    start_urls = ['https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/0-100.do']
+    start_urls = ['https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/0-100.do',
+                  'https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/101-200.do',
+                  'https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/201-300.do',
+                  'https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/301-400.do',
+                  'https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/401-500.do']
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
@@ -41,5 +46,5 @@ class CvnewsSpider(scrapy.Spider):
             item['title'] = i['news']['title']
             item['source'] = i['news']['srcName']
             item['create_time'] = self.time_convertor(i['news']['publishAt'])
-            item['content'] = i['news']['content']
+            item['content'] = Selector(text=i['news']['content']).xpath('string()').extract_first()
             yield item
