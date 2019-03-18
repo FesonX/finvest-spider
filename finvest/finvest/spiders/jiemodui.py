@@ -26,9 +26,9 @@ class JiemoduiSpider(scrapy.Spider):
         db = client['Spider']
         coll = db.finvest
 
-        if coll.find_one() is not None:
-            if coll.find_one()['title'] == response.xpath('//h1[@name="name"]/text()').extract_first():
-                raise CloseSpider("Duplicate Data")
+        # if coll.find_one() is not None:
+        #     if coll.find_one()['title'] == response.xpath('//h1[@name="name"]/text()').extract_first():
+        #         raise CloseSpider("Duplicate Data")
         item['title'] = response.xpath('//h1[@name="name"]/text()').extract_first()
         item['create_time'] = response.xpath('//time/text()').extract_first()
         item['link'] = response.url

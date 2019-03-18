@@ -8,7 +8,9 @@
 import pymongo
 import re
 import time
+import pymysql
 
+from scrapy import log
 from scrapy.exceptions import DropItem
 from scrapy.conf import settings
 from scrapy.exporters import CsvItemExporter
@@ -56,6 +58,58 @@ class FinvestPipeline(object):
 
         else:
             raise DropItem("Duplicate data %s" % item)
+
+
+class SaveToMysqlPipeline(object):
+    """
+    for saving to mysql
+    """
+    def __init__(self):
+        self.connect = pymysql.connect(
+            host=settings['MYSQL_HOST'],
+            db=settings['MYSQL_DB'],
+            user=settings['MYSQL_USER'],
+            passwd=settings['MYSQL_PASSWD'],
+            charset='utf8',
+            use_unicode=True
+        )
+        self.cursor = self.connect.cursor()
+
+    def process_item(self, item, spider):
+        try:
+            self.cursor.execute("""select * from news where title = %s and link = %s""", (str(item['title']), str(item['link'])))
+            res = self.cursor.fetchone()
+            if res:
+                raise DropItem("Duplicate item found: %s" % item['title'])
+            else:
+                content = item['content']
+                title = str(item['title'])
+
+                # get funding round
+                fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)+?1?2?3?轮|(?:天使轮|种子|首)轮|IPO|轮|(?:p|Pre)IPO')
+                result = fin.findall(title)
+                if len(result) == 0:
+                    result = "未透露"
+                else:
+                    result = ''.join(result)
+
+                content = content.replace(u'<p>', u' ').replace(u'</p>', u' ').replace(u'\n\t', ' ').strip()
+                content = content.replace('\n', '').strip()
+                # delete html label in content
+                rule = re.compile(r'<[^>]+>', re.S)
+                content = rule.sub('', content)
+
+                item['content'] = content
+                item['funding_round'] = result
+                self.cursor.execute(
+                    'insert into news(title, create_time, link, content, source) value (%s,%s,%s,%s,%s)'
+                    , (title, str(item['create_time']), str(item['link']), content, item['source'])
+                )
+                self.connect.commit()
+
+        except Exception as e:
+            print(e)
+        return item
 
 
 class SaveToCsvPipeline(object):

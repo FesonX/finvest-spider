@@ -17,7 +17,8 @@ NEWSPIDER_MODULE = 'finvest.spiders'
 
 # Add Pipeline Here
 ITEM_PIPELINES = {
-    'finvest.pipelines.FinvestPipeline': 100,
+    # 'finvest.pipelines.FinvestPipeline': 100,
+    'finvest.pipelines.SaveToMysqlPipeline': 100,
     'finvest.pipelines.SaveToCsvPipeline': 200
 }
 
@@ -100,3 +101,9 @@ MONGO_HOST = "127.0.0.1"
 MONGO_PORT = 27017
 MONGO_DB = "Spider"
 MONGO_COLL = "finvest"
+
+MYSQL_HOST = "127.0.0.1"
+MYSQL_PORT = 3306
+MYSQL_DB = "Finance"
+MYSQL_USER = 'girst'
+MYSQL_PASSWD = '*'
