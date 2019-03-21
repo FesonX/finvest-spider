@@ -2,6 +2,8 @@
 Finance and Investment Info Spider Collections - 投融资信息爬取集合
 >取Finance和Investment的前几个字母组成项目名
 
+新增反爬IP池，默认启用，使用前请移步 `middleware/ipProxy.py` 爬取可用 IP,然后再运行爬虫.
+
 ## 已接入爬虫的网站
 >### [投中网](http://www.chinaventure.com.cn)
 Spider名称: trjcn
