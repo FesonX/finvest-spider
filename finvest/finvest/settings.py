@@ -17,7 +17,8 @@ NEWSPIDER_MODULE = 'finvest.spiders'
 
 # Add Pipeline Here
 ITEM_PIPELINES = {
-    'finvest.pipelines.FinvestPipeline': 100,
+    # 'finvest.pipelines.FinvestPipeline': 100,
+    'finvest.pipelines.SaveToMysqlPipeline': 100,
     'finvest.pipelines.SaveToCsvPipeline': 200
 }
 
@@ -59,9 +60,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'finvest.middlewares.FinvestDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'middleware.customUserAgent.RandomUserAgent': 543,
+   'finvest.middlewares.RandomIpMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -100,3 +102,14 @@ MONGO_HOST = "127.0.0.1"
 MONGO_PORT = 27017
 MONGO_DB = "Spider"
 MONGO_COLL = "finvest"
+
+MYSQL_HOST = "*"
+MYSQL_PORT = 3306
+MYSQL_DB = "Finance"
+MYSQL_USER = 'girst'
+MYSQL_PASSWD = '*'
+
+# Retry many times since proxies often fail
+RETRY_TIMES = 3
+# Retry on most error codes since proxies fail for different reasons
+RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]

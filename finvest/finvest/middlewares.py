@@ -5,7 +5,17 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import sys
+sys.path.append("..")
+
 from scrapy import signals
+from middleware import ipProxy
+
+
+class RandomIpMiddleware(object):
+    def process_request(self, request, spider):
+        ip_proxy = ipProxy.ip.get_ip()
+        request.meta['proxy'] = ip_proxy
 
 
 class FinvestSpiderMiddleware(object):
