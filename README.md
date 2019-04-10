@@ -2,7 +2,32 @@
 Finance and Investment Info Spider Collections - 投融资信息爬取集合
 >取Finance和Investment的前几个字母组成项目名
 
-新增反爬IP池，默认启用，使用前请移步 `middleware/ipProxy.py` 爬取可用 IP,然后再运行爬虫.
+## 反爬策略
+>### 随机用户代理
+此功能依赖于 `fake_useragent` 
+若出现下面的错误, 请尝试卸载该库重新安装
+```shell
+fake_useragent.errors.FakeUserAgentError: Maximum amount of retries reached
+```
+>### 延迟下载
+在 `settings.py` 中修改下面的配置项启用延迟下载或者在爬虫的发起连接处使用 `time.sleep(secs)` 语句来延迟下载
+```python
+# Configure a delay for requests for the same website (default: 0)
+# See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
+# See also autothrottle settings and docs
+DOWNLOAD_DELAY = 10
+```
+>### IP 池
+默认不启用，使用前请移步 `middleware/ipProxy.py` 爬取可用 IP,然后再运行爬虫（需要自行配置 MySQL）.
+启用方式: 将 `settings.py` 中的 `RandomIpMiddleware` 取消注释即可.
+```python
+# Enable or disable downloader middlewares
+# See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
+DOWNLOADER_MIDDLEWARES = {
+   'middleware.customUserAgent.RandomUserAgent': 543,
+   # 'finvest.middlewares.RandomIpMiddleware': 543,
+}
+```
 
 ## 已接入爬虫的网站
 >### [投中网](http://www.chinaventure.com.cn)

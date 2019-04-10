@@ -90,7 +90,7 @@ class GetRandomIp(object):
                 return False
 
     def delete_ip(self, ip):
-        sql = """delete from proxy_ip where ip='%s'""" %  ip
+        sql = """delete from proxy_ip where ip='%s'""" % ip
         cursor.execute(sql)
         conn.commit()
 

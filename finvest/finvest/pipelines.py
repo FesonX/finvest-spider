@@ -38,7 +38,8 @@ class FinvestPipeline(object):
             title = item['title']
 
             # get funding round
-            fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)+?1?2?3?轮|(?:天使轮|种子|首)轮|IPO|轮|(?:p|Pre)IPO')
+            # U can test here: http://tool.oschina.net/regex
+            fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)(?:\+)?1?2?3?轮|(?:天使|种子|首)轮|IPO|(?:p|P)re-?IPO')
             result = fin.findall(title)
             if len(result) == 0:
                 result = "未透露"
@@ -86,7 +87,8 @@ class SaveToMysqlPipeline(object):
                 title = str(item['title'])
 
                 # get funding round
-                fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)+?1?2?3?轮|(?:天使轮|种子|首)轮|IPO|轮|(?:p|Pre)IPO')
+                # U can test here: http://tool.oschina.net/regex
+                fin = re.compile(r'(?:p|P)re-?(?:A|B)轮|(?:A|B|C|D|E)(?:\+)?1?2?3?轮|(?:天使|种子|首)轮|IPO|(?:p|P)re-?IPO')
                 result = fin.findall(title)
                 if len(result) == 0:
                     result = "未透露"
