@@ -3,6 +3,7 @@ import scrapy
 
 from ..items import FinvestItem
 from scrapy import Request
+from fake_useragent import UserAgent
 from pymongo import MongoClient
 from scrapy.exceptions import CloseSpider
 from scrapy.selector import Selector
@@ -17,10 +18,14 @@ class TrjcnSpider(scrapy.Spider):
         url = 'https://news.trjcn.com/rz/rongzikuaixun/?page=%d' % i
         start_urls.append(url)
 
-
+    ua = UserAgent(verify_ssl=False)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
+        'User-Agent': ua.random,
     }
+
+    # headers = {
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
+    # }
     count = 3
 
     def start_requests(self):

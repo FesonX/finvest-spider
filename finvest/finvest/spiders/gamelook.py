@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import time
 from ..items import FinvestItem
 from pymongo import MongoClient
 from scrapy.exceptions import CloseSpider
@@ -17,36 +18,26 @@ class GamelookSpider(scrapy.Spider):
     # http://www.gamelook.com.cn/category/投资创业/风险资本合作
     start_urls = ['http://www.gamelook.com.cn/category/%E6%8A%95%E8%B5%84%E5%88%9B%E4%B8%9A/%E9%A3%8E%E9%99%A9%E6%8A%95%E8%B5%84%E8%B5%84%E6%9C%AC%E5%90%88%E4%BD%9C/']
 
-    # # http://www.gamelook.com.cn/category/★手机游戏/手机游戏市场分析
-    # start_urls = ['http://www.gamelook.com.cn/category/%E2%98%85%E6%89%8B%E6%9C%BA%E6%B8%B8%E6%88%8F/%E6%89%8B%E6%9C%BA%E6%B8%B8%E6%88%8F%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90/']
-
     def parse(self, response):
         links = [link for link in response.xpath('//a[@class="thumb"]/@href').extract()]
         for link in links:
             yield scrapy.Request(link, callback=self.news_parse, headers=self.headers)
 
         if self.count < 100:
-            if self.choose == 1:
-                next_url = "http://www.gamelook.com.cn/category/%E6%8A%95%E8%B5%84%E5%88%9B%E4%B8%9A/" \
-                           "%E9%A3%8E%E9%99%A9%E6%8A%95%E8%B5%84%E8%B5%84%E6%9C%AC%E5%90%88%E4%BD%9C/page/" + str(self.count) + '/'
-            else:
-                next_url = "http://www.gamelook.com.cn/category/%E2%98%85%E6%89%8B%E6%9C%BA%E6%B8%B8%E6%88%8F/" \
-                           "%E6%89%8B%E6%9C%BA%E6%B8%B8%E6%88%8F%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90/page/" + str(self.count) + '/'
+            next_url = "http://www.gamelook.com.cn/category/%E6%8A%95%E8%B5%84%E5%88%9B%E4%B8%9A/" \
+                       "%E9%A3%8E%E9%99%A9%E6%8A%95%E8%B5%84%E8%B5%84%E6%9C%AC%E5%90%88%E4%BD%9C/page/" + str(self.count) + '/'
             self.count += 1
             yield scrapy.Request(next_url, callback=self.parse, headers=self.headers, dont_filter=False)
 
     def news_parse(self, response):
         item = FinvestItem()
-        client = MongoClient()
-        db = client['Spider']
-        coll = db.finvest
-
-        if coll.find_one() is not None:
-            if coll.find_one()['title'] == response.xpath('//h1[@class="entry-title"]/text()').extract_first():
-                raise CloseSpider("Duplicate Data")
         item['title'] = response.xpath('//h1[@class="entry-title"]/text()').extract_first()
-        item['create_time'] = response.xpath('//div[@class="entry-info"]/span/text()').extract_first()
+        t = response.xpath('//div[@class="entry-info"]/span/text()').extract_first()
+        time_array = time.strptime(t, "%Y-%m-%d")
+        item['create_time'] = int(time.mktime(time_array))
         item['link'] = response.url
         item['content'] = response.xpath('string(//div[@class="entry"]/div[2])').extract_first()
         item['source'] = response.xpath('string(//div[@class="entry-copyright"]/p/span/text())').extract_first()
+        if item['source'] == '':
+            item['source'] = 'gamelook'
         yield item

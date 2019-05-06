@@ -22,3 +22,6 @@ class FinvestItem(scrapy.Item):
 
     # Funding Round
     funding_round = scrapy.Field()
+
+    # Abstract
+    abstract = scrapy.Field()

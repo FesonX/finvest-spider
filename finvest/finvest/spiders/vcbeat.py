@@ -5,6 +5,7 @@ from ..items import FinvestItem
 from pymongo import MongoClient
 from scrapy.exceptions import CloseSpider
 import json
+import time
 
 
 class VcbeatSpider(scrapy.Spider):

@@ -7,6 +7,7 @@ from scrapy import Request
 from ..items import FinvestItem
 from pymongo import MongoClient
 from scrapy.selector import Selector
+from fake_useragent import UserAgent
 from scrapy.exceptions import CloseSpider
 
 
@@ -22,9 +23,14 @@ class CvnewsSpider(scrapy.Spider):
         url = 'https://www.chinaventure.com.cn/cmsmodel/news/jsonListByEvent/%d-%d.do' % (x, y)
         start_urls.append(url)
 
+    ua = UserAgent(verify_ssl=False)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
+        'User-Agent': ua.random,
     }
+
+    # headers = {
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
+    # }
 
     def start_request(self):
         yield Request(self.start_urls, headers=self.headers)
@@ -38,6 +44,7 @@ class CvnewsSpider(scrapy.Spider):
         sites = json.loads(response.body_as_unicode())
 
         for i in sites['data']:
+            time.sleep(3)
             # client = MongoClient()
             # db = client['Spider']
             # coll = db.finvest
@@ -49,6 +56,6 @@ class CvnewsSpider(scrapy.Spider):
             item['title'] = i['news']['title']
             item['source'] = i['news']['srcName']
             # item['create_time'] = self.time_convertor(i['news']['publishAt'])
-            item['create_time'] = i['news']['publishAt']
+            item['create_time'] = int(i['news']['publishAt']/1000)
             item['content'] = Selector(text=i['news']['content']).xpath('string()').extract_first()
             yield item

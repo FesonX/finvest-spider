@@ -2,11 +2,13 @@
 import scrapy
 import json
 import re
+import time
 
 from scrapy import Request
 from ..items import FinvestItem
 from pymongo import MongoClient
 from scrapy.exceptions import CloseSpider
+from fake_useragent import UserAgent
 
 
 class A36krSpider(scrapy.Spider):
@@ -15,8 +17,9 @@ class A36krSpider(scrapy.Spider):
     # id: 69, 投融资, 101, 政策
     start_urls = ['https://36kr.com/api/newsflash?column_ids=69&no_bid=true&b_id=&per_page=300']
 
+    ua = UserAgent(verify_ssl=False)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
+        'User-Agent': ua.random,
     }
 
     def start_request(self):
@@ -30,13 +33,13 @@ class A36krSpider(scrapy.Spider):
         src_pattern = re.compile('。（(.*)）')
 
         for i in sites['data']['items']:
-            client = MongoClient()
-            db = client['Spider']
-            coll = db.finvest
-
-            if coll.find_one() is not None:
-                if coll.find_one()['title'] == i['title']:
-                    raise CloseSpider("Duplicate Data")
+            # client = MongoClient()
+            # db = client['Spider']
+            # coll = db.finvest
+            #
+            # if coll.find_one() is not None:
+            #     if coll.find_one()['title'] == i['title']:
+            #         raise CloseSpider("Duplicate Data")
             item['title'] = i['title']
             item['link'] = i['news_url']
             
@@ -44,7 +47,9 @@ class A36krSpider(scrapy.Spider):
                 item['source'] = "36Kr"
             else:
                 item['source'] = src_pattern.search(i['description']).group(1)
-            item['create_time'] = i['published_at']
+            t = i['published_at']
+            time_array = time.strptime(t, "%Y-%m-%d %H:%M:%S")
+            item['create_time'] = int(time.mktime(time_array))
             item['content'] = i['description']
             
             yield item
